@@ -1,274 +1,566 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Andy · Prontuário Odontológico Completo</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00a896">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2300a896'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3EAR%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* ========== GLOBAL ========== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
+
+    :root {
+      --primary: #00a896;
+      --primary-dark: #028476;
+      --primary-light: #e0f2f0;
+      --secondary: #ffb703;
+      --danger: #e63946;
+      --gray-bg: #f4f9fc;
+      --gray-border: #dbe7ed;
+      --text-dark: #1e2f4e;
+      --text-light: #6c7a89;
+      --white: #ffffff;
+      --shadow-sm: 0 4px 12px rgba(0,168,150,0.08);
+      --shadow-md: 0 8px 20px rgba(0,0,0,0.02);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
     body {
-      background: #f4f9fc;
-      color: #1e2f4e;
+      background: var(--gray-bg);
+      color: var(--text-dark);
       line-height: 1.5;
-      padding-bottom: 80px;
+      padding-bottom: 90px;
+      min-height: 100vh;
     }
+
+    /* ========== HEADER ========== */
     .app-header {
-      background: linear-gradient(145deg, #028476, #00a896);
+      background: linear-gradient(145deg, var(--primary-dark), var(--primary));
       color: white;
       padding: 18px 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 4px 12px rgba(0,168,150,0.2);
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
+
     .logo {
       background: white;
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
-      color: #028476;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: var(--primary-dark);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
-    .logo span { transform: scale(0.9); letter-spacing: -2px; }
-    .app-header h1 { font-size: 1.7rem; font-weight: 600; }
-    .app-header h1 small { font-size: 0.9rem; opacity: 0.9; display: block; }
 
-    /* Navegação inferior (PWA) */
+    .app-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .app-header h1 small {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      display: block;
+      font-weight: 400;
+    }
+
+    /* ========== BOTTOM NAVIGATION (PWA) ========== */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: white;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0 12px;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
-      border-top: 1px solid #e6edf2;
-      backdrop-filter: blur(10px);
-      z-index: 100;
+      padding: 8px 0 14px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.02);
+      border-top: 1px solid var(--gray-border);
+      z-index: 1000;
     }
+
     .nav-item {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #7a8b9b;
+      color: var(--text-light);
       font-size: 0.75rem;
-      transition: 0.2s;
+      transition: all 0.15s;
       padding: 6px 0;
       cursor: pointer;
     }
-    .nav-item i { font-size: 1.5rem; margin-bottom: 2px; }
-    .nav-item.active { color: #00a896; font-weight: 500; }
 
-    .container { padding: 20px 18px; max-width: 800px; margin: 0 auto; }
-    .section { display: none; animation: fade 0.2s ease; }
-    .section.active { display: block; }
-    @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+    .nav-item i {
+      font-size: 1.6rem;
+      margin-bottom: 3px;
+    }
 
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ========== CONTAINER E SEÇÕES ========== */
+    .container {
+      padding: 20px 18px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0.3; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== CARDS ========== */
     .card {
-      background: white;
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-md);
       border: 1px solid #eaf0f5;
     }
 
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-dark);
+    }
+
+    .card-title i {
+      font-size: 1.6rem;
+    }
+
+    /* ========== BOTÕES ========== */
     .btn {
-      background: #00a896;
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 30px;
+      padding: 14px 22px;
+      border-radius: 40px;
       font-size: 1rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       width: 100%;
-      transition: 0.2s;
+      transition: 0.18s;
       cursor: pointer;
       border: 1px solid transparent;
     }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: scale(0.98);
+    }
+
     .btn-outline {
       background: white;
-      color: #00a896;
-      border: 1.5px solid #00a896;
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
+
+    .btn-outline:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
     .btn-small {
-      padding: 8px 16px;
+      padding: 10px 18px;
       font-size: 0.9rem;
       width: auto;
     }
+
     .btn-danger {
-      background: #e63946;
+      background: var(--danger);
       color: white;
     }
-    .btn-warning {
-      background: #ffb703;
-      color: #1e2f4e;
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--text-dark);
     }
 
+    /* ========== FORMULÁRIOS ========== */
     input, textarea, select {
       width: 100%;
-      padding: 14px 18px;
-      border: 1.5px solid #dbe7ed;
-      border-radius: 18px;
+      padding: 15px 20px;
+      border: 1.8px solid var(--gray-border);
+      border-radius: 30px;
       font-size: 1rem;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       background: white;
       transition: 0.2s;
     }
+
     input:focus, textarea:focus, select:focus {
-      border-color: #00a896;
+      border-color: var(--primary);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
-    }
-    label {
-      font-weight: 600;
-      color: #1e3b5c;
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
+      box-shadow: 0 0 0 4px rgba(0,168,150,0.08);
     }
 
-    /* Odontograma aprimorado */
+    label {
+      font-weight: 600;
+      color: var(--text-dark);
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    /* ========== ODONTOGRAMA PROFISSIONAL ========== */
     .tooth-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
-      gap: 8px;
-      margin: 20px 0;
+      gap: 10px;
+      margin: 25px 0;
     }
+
     .tooth {
       aspect-ratio: 1/1;
-      background: #f4fafc;
-      border: 2px solid #bdd4de;
-      border-radius: 10px;
+      background: #f8fbfd;
+      border: 2.5px solid #cbd8e0;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #1e2f4e;
+      color: var(--text-dark);
       cursor: pointer;
-      transition: 0.1s;
+      transition: 0.08s;
       position: relative;
     }
-    .tooth span { font-size: 1.2rem; }
-    .tooth.caries { background: #f8d7da; border-color: #dc3545; }
-    .tooth.restored { background: #fff3cd; border-color: #ffc107; }
-    .tooth.missing { background: #e9ecef; border-color: #6c757d; opacity: 0.6; }
-    .tooth.crown { background: #d4edda; border-color: #28a745; }
-    .tooth.root { background: #d1ecf1; border-color: #17a2b8; }
-    .tooth.selected { background: #00a896; color: white; border-color: #007a6b; }
 
-    /* Lista dinâmica (medicamentos, procedimentos) */
-    .dynamic-list {
-      margin-bottom: 20px;
+    .tooth span {
+      font-size: 1.5rem;
+      line-height: 1;
     }
-    .list-item {
-      background: #f8fbfd;
-      border-radius: 16px;
-      padding: 12px 16px;
-      margin-bottom: 10px;
+
+    .tooth.caries {
+      background: #ffd6d9;
+      border-color: #dc3545;
+    }
+
+    .tooth.restored {
+      background: #fff4d4;
+      border-color: #ffb703;
+    }
+
+    .tooth.missing {
+      background: #e6eaed;
+      border-color: #6c757d;
+      opacity: 0.7;
+    }
+
+    .tooth.crown {
+      background: #d6f0e2;
+      border-color: #28a745;
+    }
+
+    .tooth.root {
+      background: #d1e7ff;
+      border-color: #0d6efd;
+    }
+
+    .tooth.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-dark);
+    }
+
+    .tooth.has-obs::after {
+      content: "•";
+      position: absolute;
+      top: 2px;
+      right: 5px;
+      color: #e63946;
+      font-size: 1.8rem;
+    }
+
+    /* ========== AGENDA (CALENDÁRIO SEMANAL) ========== */
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      background: var(--primary-light);
+      padding: 12px;
+      border-radius: 40px;
+    }
+
+    .weekday {
+      font-size: 0.9rem;
+    }
+
+    .agenda-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: #f1f5f9;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--gray-border);
+    }
+
+    .agenda-row {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      background: white;
+    }
+
+    .time-slot {
+      padding: 12px 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: #f4f9fc;
+      border-right: 1px solid #d4e0e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .agenda-cell {
+      border-right: 1px solid #edf2f6;
+      border-bottom: 1px solid #edf2f6;
+      min-height: 60px;
+      padding: 6px;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .agenda-cell:hover {
+      background: #e3f2f0;
+    }
+
+    .appointment {
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      padding: 6px 8px;
+      font-size: 0.7rem;
+      margin-bottom: 4px;
+      word-break: break-word;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-left: 5px solid #00a896;
     }
-    .list-item .info {
+
+    .appointment span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .appointment i {
+      margin-left: 4px;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ========== LISTAS DINÂMICAS (MEDICAMENTOS, PROCEDIMENTOS) ========== */
+    .dynamic-list {
+      background: #fafdfe;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .list-item {
+      background: white;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 8px solid var(--primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .item-info {
       flex: 1;
+      font-size: 0.95rem;
     }
-    .list-item .actions button {
+
+    .item-info strong {
+      color: var(--primary-dark);
+    }
+
+    .item-actions button {
       background: none;
       border: none;
-      color: #e63946;
+      color: var(--danger);
       font-size: 1.2rem;
       cursor: pointer;
-      margin-left: 8px;
+      margin-left: 10px;
+      padding: 6px;
     }
 
-    .radio-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
+    /* ========== DOCUMENTO PREVIEW (FORMATAÇÃO PROFISSIONAL) ========== */
+    .document-preview {
+      background: #f9fdfe;
+      padding: 28px;
+      border-radius: 24px;
+      margin-top: 28px;
+      border-left: 8px solid var(--primary);
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
     }
-    .radio-item {
-      background: #f2f6f9;
-      border-radius: 16px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100px;
-      border: 1px solid #d4e0e8;
+
+    /* ========== RADIOGRAFIAS ========== */
+    .xray-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
     }
-    .radio-item img {
-      width: 80px;
-      height: 80px;
+
+    .xray-item {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--gray-border);
+    }
+
+    .xray-item img {
+      width: 100%;
+      aspect-ratio: 1/1;
       object-fit: cover;
-      border-radius: 12px;
-      background: #d9e2e9;
+      border-radius: 16px;
+      background: #e2ecf2;
       cursor: pointer;
     }
 
-    .document-preview {
-      background: #f1f8fa;
-      padding: 20px;
-      border-radius: 20px;
-      margin-top: 20px;
-      border-left: 6px solid #00a896;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
-    }
-
+    /* ========== UTILITÁRIOS ========== */
     .flex-row {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
       flex-wrap: wrap;
     }
-    .mt-20 { margin-top: 20px; }
+
+    .mt-24 { margin-top: 24px; }
+    .mb-16 { margin-bottom: 16px; }
     .text-right { text-align: right; }
+    .w-100 { width: 100%; }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gray-border), transparent);
+      margin: 28px 0;
+    }
   </style>
 </head>
 <body>
   <header class="app-header">
     <div class="logo"><span>AR</span></div>
-    <h1>Andy <small>prontuário completo</small></h1>
+    <h1>Andy <small>clínica odontológica</small></h1>
   </header>
 
   <div class="container" id="app">
-    <!-- ========== SEÇÃO PACIENTES ========= -->
-    <div id="patientsSection" class="section active">
+    <!-- ==================== SEÇÃO HOJE (PAINEL) ==================== -->
+    <div id="todaySection" class="section">
       <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h2 style="font-size: 1.6rem;"><i class="fas fa-users" style="color: #00a896;"></i> Pacientes</h2>
-          <button class="btn-small btn" onclick="addPatient()"><i class="fas fa-plus"></i> Novo</button>
+        <div class="card-title">
+          <i class="fas fa-calendar-day"></i> Hoje
         </div>
-        <div id="patientList"></div>
+        <div id="todaySummary" style="background: var(--primary-light); padding: 20px; border-radius: 30px; margin-bottom: 24px;">
+          <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-dark);" id="todayDate"></p>
+          <p id="todayAppointmentsCount">Nenhuma consulta agendada para hoje.</p>
+        </div>
+        <div id="todayAppointmentsList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        <button class="btn-outline btn-small" onclick="showSection('agenda')"><i class="fas fa-arrow-right"></i> Ver agenda completa</button>
       </div>
+    </div>
+
+    <!-- ==================== SEÇÃO AGENDA ==================== -->
+    <div id="agendaSection" class="section">
       <div class="card">
+        <div class="card-title">
+          <i class="fas fa-calendar-alt"></i> Agenda semanal
+        </div>
+        <!-- Controles de navegação da semana -->
+        <div class="flex-row" style="justify-content: space-between; margin-bottom: 24px;">
+          <button class="btn-small btn-outline" onclick="semanaAnterior()"><i class="fas fa-chevron-left"></i> Anterior</button>
+          <span style="font-weight: 600; background: var(--primary-light); padding: 10px 20px; border-radius: 40px;" id="semanaLabel">11 a 17 de Abril</span>
+          <button class="btn-small btn-outline" onclick="proximaSemana()">Próxima <i class="fas fa-chevron-right"></i></button>
+        </div>
+        <!-- Cabeçalho dias da semana -->
+        <div class="weekdays" id="weekdayHeaders"></div>
+        <!-- Grid de horários -->
+        <div class="agenda-grid" id="agendaGrid"></div>
+        <!-- Formulário para nova consulta -->
+        <div style="margin-top: 32px; background: #f2f9fc; padding: 20px; border-radius: 28px;">
+          <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><i class="fas fa-plus-circle" style="color: var(--primary);"></i> Nova consulta</h3>
+          <select id="appointmentPatientSelect">
+            <option value="">— Selecione o paciente —</option>
+          </select>
+          <div class="flex-row">
+            <input type="date" id="appointmentDate" style="flex:2;">
+            <input type="time" id="appointmentTime" style="flex:1;">
+          </div>
+          <input type="text" id="appointmentNotes" placeholder="Observações (opcional)">
+          <button class="btn" onclick="addAppointment()"><i class="fas fa-check"></i> Agendar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SEÇÃO PACIENTES ==================== -->
+    <div id="patientsSection" class="section">
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-users"></i> Pacientes
+          <button class="btn-small btn" onclick="addPatient()" style="width: auto; margin-left: auto;"><i class="fas fa-plus"></i> Novo</button>
+        </div>
+        <div id="patientList" style="margin-bottom: 24px;"></div>
+        <div class="divider"></div>
         <h3 style="margin-bottom: 16px;"><i class="fas fa-tooth"></i> Acessar prontuário</h3>
         <select id="patientSelector" onchange="loadClinicalRecord()">
           <option value="">— Selecione um paciente —</option>
@@ -277,153 +569,194 @@
       </div>
     </div>
 
-    <!-- ========== SEÇÃO PRONTUÁRIO ========= -->
+    <!-- ==================== SEÇÃO PRONTUÁRIO ==================== -->
     <div id="recordSection" class="section">
       <div class="card">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-          <i class="fas fa-arrow-left" style="font-size: 1.6rem; color: #00a896;" onclick="showSection('patients')"></i>
-          <h2 style="font-size: 1.5rem;">🦷 Prontuário</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+          <i class="fas fa-arrow-left" style="font-size: 1.8rem; color: var(--primary); cursor: pointer;" onclick="showSection('patients')"></i>
+          <h2 style="font-size: 1.7rem; margin-left: 8px;">🦷 Prontuário</h2>
         </div>
-        <div id="recordPatientInfo" style="background: #e0f2f0; padding: 16px; border-radius: 18px; margin-bottom: 24px;">
-          <strong id="recordPatientName"></strong>
+        <div id="recordPatientInfo" style="background: var(--primary-light); padding: 18px; border-radius: 30px; margin-bottom: 28px;">
+          <strong id="recordPatientName" style="font-size: 1.2rem;"></strong>
         </div>
         
         <!-- Odontograma -->
-        <label>Odontograma (clique no dente para marcar)</label>
+        <label><i class="fas fa-chart-pie"></i> Odontograma (clique no dente)</label>
         <div class="tooth-grid" id="teethGrid"></div>
-        
-        <!-- Anamnese / Dados do paciente -->
+
+        <!-- Dados cadastrais e anamnese -->
         <label>Idade</label>
-        <input type="text" id="patientAge" placeholder="Idade">
+        <input type="text" id="patientAge" placeholder="Ex: 35 anos">
         <label>Contato</label>
-        <input type="text" id="patientContact" placeholder="Telefone / Email">
-        
+        <input type="text" id="patientContact" placeholder="Telefone / E-mail">
         <label>Histórico / Anamnese</label>
-        <textarea id="patientHistory" rows="3" placeholder="Alergias, doenças prévias, medicamentos em uso..."></textarea>
-        
+        <textarea id="patientHistory" rows="3" placeholder="Alergias, doenças pré-existentes, medicamentos contínuos..."></textarea>
         <label>Evolução / Plano de tratamento</label>
-        <textarea id="clinicalNotes" rows="4" placeholder="Descreva o procedimento, observações, plano..."></textarea>
+        <textarea id="clinicalNotes" rows="4" placeholder="Descreva procedimentos realizados, planejamento..."></textarea>
         
         <div class="flex-row">
-          <button class="btn-small btn" onclick="saveClinicalRecord()"><i class="fas fa-save"></i> Salvar</button>
-          <button class="btn-small btn-outline" onclick="showSection('documents')"><i class="fas fa-file-prescription"></i> Gerar documento</button>
+          <button class="btn" onclick="saveClinicalRecord()"><i class="fas fa-save"></i> Salvar</button>
+          <button class="btn-outline" onclick="showSection('documents')"><i class="fas fa-file-prescription"></i> Gerar documento</button>
         </div>
       </div>
     </div>
 
-    <!-- ========== SEÇÃO DOCUMENTOS ========= -->
+    <!-- ==================== SEÇÃO DOCUMENTOS ==================== -->
     <div id="documentsSection" class="section">
       <div class="card">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-          <i class="fas fa-arrow-left" style="font-size: 1.6rem; color: #00a896;" onclick="showSection('patients')"></i>
-          <h2 style="font-size: 1.5rem;">📄 Gerador de Documentos</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+          <i class="fas fa-arrow-left" style="font-size: 1.8rem; color: var(--primary); cursor: pointer;" onclick="showSection('patients')"></i>
+          <h2 style="font-size: 1.7rem;">📄 Documentos</h2>
         </div>
-        
+
         <label>Paciente</label>
         <select id="docPatientSelector" onchange="updateDocPatient()">
           <option value="">— Selecione o paciente —</option>
         </select>
-        
-        <!-- Abas de documentos -->
-        <div style="display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+
+        <!-- Abas de tipos de documento -->
+        <div style="display: flex; gap: 12px; margin: 28px 0; flex-wrap: wrap;">
           <button class="btn-small btn-outline" onclick="showDocTab('prescricao')"><i class="fas fa-prescription"></i> Receituário</button>
           <button class="btn-small btn-outline" onclick="showDocTab('orcamento')"><i class="fas fa-calculator"></i> Orçamento</button>
           <button class="btn-small btn-outline" onclick="showDocTab('laudo')"><i class="fas fa-file-signature"></i> Laudo</button>
           <button class="btn-small btn-outline" onclick="showDocTab('atestado')"><i class="fas fa-stethoscope"></i> Atestado</button>
         </div>
 
-        <!-- Painel RECEITUÁRIO -->
+        <!-- ===== PAINEL RECEITUÁRIO (FORMATAÇÃO PROFISSIONAL) ===== -->
         <div id="docPrescricaoPanel" style="display: none;">
-          <h3>🩺 Receituário</h3>
-          <label>Medicamentos</label>
+          <h3 style="color: var(--primary-dark); margin-bottom: 16px;"><i class="fas fa-pills"></i> Medicamentos prescritos</h3>
           <div id="medicamentoList" class="dynamic-list"></div>
-          <div class="flex-row">
-            <input type="text" id="medNome" placeholder="Nome do medicamento" style="flex:2;">
-            <input type="text" id="medPosologia" placeholder="Posologia (ex: 1cp 8/8h)" style="flex:2;">
-            <input type="text" id="medDuracao" placeholder="Duração (ex: 7 dias)" style="flex:1;">
-            <button class="btn-small" onclick="addMedicamento()"><i class="fas fa-plus"></i></button>
+          <div style="background: #f2f9fc; padding: 18px; border-radius: 24px; margin-bottom: 20px;">
+            <div class="flex-row" style="align-items: flex-end;">
+              <div style="flex: 2;">
+                <label>Medicamento</label>
+                <input type="text" id="medNome" placeholder="Ex: Amoxicilina">
+              </div>
+              <div style="flex: 1;">
+                <label>Dosagem</label>
+                <input type="text" id="medDosagem" placeholder="500mg">
+              </div>
+              <div style="flex: 1;">
+                <label>Forma</label>
+                <input type="text" id="medForma" placeholder="cápsula / comp">
+              </div>
+            </div>
+            <div class="flex-row">
+              <div style="flex: 2;">
+                <label>Posologia</label>
+                <input type="text" id="medPosologia" placeholder="1 de 8/8h">
+              </div>
+              <div style="flex: 1;">
+                <label>Duração</label>
+                <input type="text" id="medDuracao" placeholder="7 dias">
+              </div>
+              <div style="flex: 0.5;">
+                <label>&nbsp;</label>
+                <button class="btn-small" onclick="addMedicamento()" style="background: var(--primary); color: white; border-radius: 30px; padding: 12px 16px;"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
           </div>
           <label>Observações da receita</label>
-          <textarea id="prescricaoObs" rows="2" placeholder="Instruções adicionais..."></textarea>
+          <textarea id="prescricaoObs" rows="2" placeholder="Uso contínuo, não ingerir bebida alcoólica..."></textarea>
         </div>
 
-        <!-- Painel ORÇAMENTO -->
+        <!-- ===== PAINEL ORÇAMENTO ===== -->
         <div id="docOrcamentoPanel" style="display: none;">
-          <h3>💰 Orçamento</h3>
-          <label>Procedimentos</label>
+          <h3 style="color: var(--primary-dark);"><i class="fas fa-list-ol"></i> Procedimentos</h3>
           <div id="procedimentoList" class="dynamic-list"></div>
-          <div class="flex-row">
-            <input type="text" id="procNome" placeholder="Procedimento" style="flex:2;">
-            <input type="number" id="procQtd" placeholder="Qtd" style="flex:1;" value="1">
-            <input type="text" id="procValor" placeholder="Valor unitário (R$)" style="flex:1;">
-            <button class="btn-small" onclick="addProcedimento()"><i class="fas fa-plus"></i></button>
+          <div style="background: #f2f9fc; padding: 18px; border-radius: 24px;">
+            <div class="flex-row">
+              <div style="flex: 2;">
+                <label>Procedimento</label>
+                <input type="text" id="procNome" placeholder="Ex: Restauração">
+              </div>
+              <div style="flex: 1;">
+                <label>Dente/região</label>
+                <input type="text" id="procDente" placeholder="26">
+              </div>
+            </div>
+            <div class="flex-row">
+              <div style="flex: 1;">
+                <label>Quantidade</label>
+                <input type="number" id="procQtd" value="1" min="1">
+              </div>
+              <div style="flex: 1;">
+                <label>Valor unitário (R$)</label>
+                <input type="text" id="procValor" placeholder="250,00">
+              </div>
+              <div style="flex: 0.5;">
+                <label>&nbsp;</label>
+                <button class="btn-small" onclick="addProcedimento()" style="background: var(--primary); color: white;"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
           </div>
-          <div class="text-right" style="margin-top: 10px;">
-            <strong>Total: R$ <span id="orcamentoTotal">0.00</span></strong>
+          <div class="text-right" style="margin: 20px 0; font-size: 1.3rem;">
+            <strong>Total: R$ <span id="orcamentoTotal">0,00</span></strong>
           </div>
           <label>Observações do orçamento</label>
-          <textarea id="orcamentoObs" rows="2" placeholder="Validade, forma de pagamento..."></textarea>
+          <textarea id="orcamentoObs" rows="2" placeholder="Validade: 30 dias, desconto para pagamento à vista..."></textarea>
         </div>
 
-        <!-- Painel LAUDO -->
+        <!-- ===== PAINEL LAUDO ===== -->
         <div id="docLaudoPanel" style="display: none;">
-          <h3>📋 Laudo</h3>
+          <h3 style="color: var(--primary-dark);">📋 Laudo</h3>
           <label>Exame / Procedimento</label>
-          <input type="text" id="laudoExame" placeholder="Exame realizado">
-          <label>Conclusão</label>
-          <textarea id="laudoConclusao" rows="3" placeholder="Descrição do laudo..."></textarea>
+          <input type="text" id="laudoExame" placeholder="Ex: Radiografia panorâmica">
+          <label>Conclusão / Descrição</label>
+          <textarea id="laudoConclusao" rows="4" placeholder="Descreva o resultado do exame, diagnóstico..."></textarea>
         </div>
 
-        <!-- Painel ATESTADO -->
+        <!-- ===== PAINEL ATESTADO ===== -->
         <div id="docAtestadoPanel" style="display: none;">
-          <h3>🩻 Atestado</h3>
+          <h3 style="color: var(--primary-dark);">🩻 Atestado</h3>
           <label>Período de repouso</label>
           <input type="text" id="atestadoPeriodo" placeholder="Ex: 24 horas, 2 dias">
-          <label>Observações</label>
-          <textarea id="atestadoObs" rows="2" placeholder="CID, justificativa..."></textarea>
+          <label>CID / Observações</label>
+          <textarea id="atestadoObs" rows="3" placeholder="CID K02.9, repouso relativo..."></textarea>
         </div>
 
-        <button class="btn" style="margin-top: 20px;" onclick="generateDoc()"><i class="fas fa-file-alt"></i> Gerar Documento</button>
-        
-        <div id="docPreviewArea" class="document-preview mt-20">
-          <strong>📋 Prévia do documento</strong>
-          <div id="docContent" style="margin-top: 12px; white-space: pre-wrap;"></div>
-          <button class="btn-small" style="margin-top: 16px;" onclick="printDoc()"><i class="fas fa-print"></i> Imprimir</button>
+        <button class="btn" style="margin-top: 28px;" onclick="generateDoc()"><i class="fas fa-file-alt"></i> Gerar documento</button>
+
+        <!-- Área de preview com formatação limpa -->
+        <div id="docPreviewArea" class="document-preview">
+          <strong style="font-size: 1.1rem; display: block; margin-bottom: 16px; color: var(--primary-dark);">📋 Prévia do documento</strong>
+          <div id="docContent" style="white-space: pre-wrap; font-family: 'Courier New', monospace;"></div>
+          <button class="btn-small" style="margin-top: 24px;" onclick="printDoc()"><i class="fas fa-print"></i> Imprimir</button>
         </div>
       </div>
     </div>
 
-    <!-- ========== SEÇÃO RADIOGRAFIAS ========= -->
+    <!-- ==================== SEÇÃO RADIOGRAFIAS ==================== -->
     <div id="xraySection" class="section">
       <div class="card">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-          <i class="fas fa-arrow-left" style="font-size: 1.6rem; color: #00a896;" onclick="showSection('patients')"></i>
-          <h2 style="font-size: 1.5rem;">🩻 Radiografias</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+          <i class="fas fa-arrow-left" style="font-size: 1.8rem; color: var(--primary); cursor: pointer;" onclick="showSection('patients')"></i>
+          <h2 style="font-size: 1.7rem;">🩻 Radiografias</h2>
         </div>
         <select id="xrayPatientSelector" onchange="loadXrays()">
           <option value="">— Selecione paciente —</option>
         </select>
-        <div style="margin: 24px 0;">
-          <label for="xrayUpload">Adicionar nova radiografia</label>
+        <div style="margin: 28px 0;">
+          <label for="xrayUpload"><i class="fas fa-cloud-upload-alt"></i> Adicionar nova radiografia</label>
           <input type="file" id="xrayUpload" accept="image/*" onchange="handleXrayUpload(event)">
         </div>
-        <div id="xrayGallery" class="radio-grid"></div>
+        <div id="xrayGallery" class="xray-gallery"></div>
       </div>
     </div>
 
-    <!-- ========== SEÇÃO PROFISSIONAL ========= -->
+    <!-- ==================== SEÇÃO PROFISSIONAL ==================== -->
     <div id="profissionalSection" class="section">
       <div class="card">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-          <i class="fas fa-arrow-left" style="font-size: 1.6rem; color: #00a896;" onclick="showSection('patients')"></i>
-          <h2 style="font-size: 1.5rem;">👨‍⚕️ Dados do Profissional</h2>
+        <div class="flex-row" style="margin-bottom: 20px;">
+          <i class="fas fa-arrow-left" style="font-size: 1.8rem; color: var(--primary); cursor: pointer;" onclick="showSection('patients')"></i>
+          <h2 style="font-size: 1.7rem;">👨‍⚕️ Profissional</h2>
         </div>
         <label>Nome completo</label>
         <input type="text" id="profNome" placeholder="Dr. ...">
         <label>CRO</label>
         <input type="text" id="profCro" placeholder="CRO-XX 00000">
-        <label>Assinatura (nome)</label>
-        <input type="text" id="profAssinatura" placeholder="Como assina">
+        <label>Assinatura (nome para documentos)</label>
+        <input type="text" id="profAssinatura" placeholder="Como aparece na assinatura">
         <label>Carimbo / Clínica</label>
         <input type="text" id="profCarimbo" placeholder="Nome da clínica / especialidade">
         <button class="btn" onclick="saveProfessional()"><i class="fas fa-save"></i> Salvar profissional</button>
@@ -431,8 +764,16 @@
     </div>
   </div>
 
-  <!-- Navegação inferior -->
+  <!-- ==================== BOTTOM NAVIGATION ==================== -->
   <nav class="bottom-nav">
+    <div class="nav-item" onclick="showSection('today')" id="nav-today">
+      <i class="fas fa-home"></i>
+      <span>Hoje</span>
+    </div>
+    <div class="nav-item" onclick="showSection('agenda')" id="nav-agenda">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Agenda</span>
+    </div>
     <div class="nav-item active" onclick="showSection('patients')" id="nav-patients">
       <i class="fas fa-address-book"></i>
       <span>Pacientes</span>
@@ -441,66 +782,84 @@
       <i class="fas fa-file-alt"></i>
       <span>Documentos</span>
     </div>
-    <div class="nav-item" onclick="showSection('xray')" id="nav-xray">
-      <i class="fas fa-x-ray"></i>
-      <span>Raio-X</span>
-    </div>
     <div class="nav-item" onclick="showSection('profissional')" id="nav-profissional">
       <i class="fas fa-user-md"></i>
-      <span>Profissional</span>
+      <span>Perfil</span>
     </div>
   </nav>
 
   <script>
-    // ========== BANCO DE DADOS ==========
+    // =========================================================================
+    // ANDY - PRONTUÁRIO ODONTOLÓGICO COMPLETO (VERSÃO FINAL)
+    // =========================================================================
+    // FUNCIONALIDADES: PACIENTES, PRONTUÁRIO, ODONTOGRAMA, DOCUMENTOS,
+    // RADIOGRAFIAS, PROFISSIONAL, AGENDA, HOJE, PWA, OFFLINE
+    // =========================================================================
+
+    // -------------------------------------------------------------------------
+    // BANCO DE DADOS (localStorage)
+    // -------------------------------------------------------------------------
     let pacientes = JSON.parse(localStorage.getItem('andy_pacientes')) || [];
     let profissional = JSON.parse(localStorage.getItem('andy_profissional')) || {
       nome: 'Dr. Andy Silva',
       cro: 'CRO-DF 12345',
       assinatura: 'Andy Silva',
-      carimbo: 'Andy Odontologia'
+      carimbo: 'Andy Odontologia · Especialista em Implantodontia'
     };
+    let consultas = JSON.parse(localStorage.getItem('andy_consultas')) || [];
+
+    // Variáveis de estado
     let pacienteAtualId = null;
     let docPacienteId = null;
     let xrayPacienteId = null;
+    let semanaOffset = 0; // para navegação da agenda
 
     // Dados temporários para documentos
     let medicamentos = [];
     let procedimentos = [];
     let docTipoAtual = 'prescricao';
 
-    // ========== INICIALIZAÇÃO ==========
+    // -------------------------------------------------------------------------
+    // INICIALIZAÇÃO
+    // -------------------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', () => {
+      carregarDadosIniciais();
       renderPatientList();
       renderPatientSelectors();
       initToothGrid();
       loadProfessionalData();
-      showSection('patients');
+      atualizarAgenda();
+      atualizarToday();
+      showSection('today');
     });
 
-    // ========== PROFISSIONAL ==========
-    function loadProfessionalData() {
-      document.getElementById('profNome').value = profissional.nome || '';
-      document.getElementById('profCro').value = profissional.cro || '';
-      document.getElementById('profAssinatura').value = profissional.assinatura || '';
-      document.getElementById('profCarimbo').value = profissional.carimbo || '';
-    }
-    window.saveProfessional = function() {
-      profissional = {
-        nome: document.getElementById('profNome').value,
-        cro: document.getElementById('profCro').value,
-        assinatura: document.getElementById('profAssinatura').value,
-        carimbo: document.getElementById('profCarimbo').value
-      };
-      localStorage.setItem('andy_profissional', JSON.stringify(profissional));
-      alert('✅ Dados do profissional salvos!');
+    function carregarDadosIniciais() {
+      // Garantir estrutura de pacientes
+      pacientes.forEach(p => {
+        if (!p.odontograma) p.odontograma = Array(32).fill({ status: 'sadio', obs: '' });
+        if (!p.radiografias) p.radiografias = [];
+        if (!p.historia) p.historia = '';
+        if (!p.notas) p.notas = '';
+      });
     }
 
-    // ========== NAVEGAÇÃO ==========
+    // -------------------------------------------------------------------------
+    // NAVEGAÇÃO ENTRE SEÇÕES
+    // -------------------------------------------------------------------------
     window.showSection = function(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      if (section === 'patients') {
+      
+      if (section === 'today') {
+        document.getElementById('todaySection').classList.add('active');
+        document.getElementById('nav-today').classList.add('active');
+        atualizarToday();
+      } else if (section === 'agenda') {
+        document.getElementById('agendaSection').classList.add('active');
+        document.getElementById('nav-agenda').classList.add('active');
+        atualizarAgenda();
+        renderPatientSelectors();
+      } else if (section === 'patients') {
         document.getElementById('patientsSection').classList.add('active');
         document.getElementById('nav-patients').classList.add('active');
         renderPatientList();
@@ -516,7 +875,7 @@
         showDocTab('prescricao');
       } else if (section === 'xray') {
         document.getElementById('xraySection').classList.add('active');
-        document.getElementById('nav-xray').classList.add('active');
+        document.getElementById('nav-patients').classList.add('active');
         renderPatientSelectors();
         loadXrays();
       } else if (section === 'profissional') {
@@ -524,9 +883,32 @@
         document.getElementById('nav-profissional').classList.add('active');
         loadProfessionalData();
       }
+    };
+
+    // -------------------------------------------------------------------------
+    // PROFISSIONAL
+    // -------------------------------------------------------------------------
+    function loadProfessionalData() {
+      document.getElementById('profNome').value = profissional.nome || '';
+      document.getElementById('profCro').value = profissional.cro || '';
+      document.getElementById('profAssinatura').value = profissional.assinatura || '';
+      document.getElementById('profCarimbo').value = profissional.carimbo || '';
     }
 
-    // ========== PACIENTES ==========
+    window.saveProfessional = function() {
+      profissional = {
+        nome: document.getElementById('profNome').value,
+        cro: document.getElementById('profCro').value,
+        assinatura: document.getElementById('profAssinatura').value,
+        carimbo: document.getElementById('profCarimbo').value
+      };
+      localStorage.setItem('andy_profissional', JSON.stringify(profissional));
+      alert('✅ Dados do profissional salvos com sucesso!');
+    };
+
+    // -------------------------------------------------------------------------
+    // PACIENTES
+    // -------------------------------------------------------------------------
     window.addPatient = function() {
       const nome = prompt('Nome completo do paciente:');
       if (!nome) return;
@@ -544,41 +926,48 @@
       localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
       renderPatientList();
       renderPatientSelectors();
-    }
+    };
 
     function renderPatientList() {
       const el = document.getElementById('patientList');
       if (pacientes.length === 0) {
-        el.innerHTML = '<p style="color: #6c7a89;">Nenhum paciente cadastrado.</p>';
+        el.innerHTML = '<p style="color: var(--text-light); text-align: center; padding: 20px;">Nenhum paciente cadastrado.</p>';
         return;
       }
       let html = '<ul style="list-style: none;">';
       pacientes.forEach(p => {
-        html += `<li style="padding: 14px; border-bottom: 1px solid #e0ecf0; display: flex; justify-content: space-between;">
-                  <span><strong>${p.nome}</strong> ${p.idade ? '· '+p.idade : ''}</span>
-                  <span>
-                    <button class="btn-small" onclick="selectPatient(${p.id})"><i class="fas fa-folder-open"></i></button>
-                    <button class="btn-small" onclick="deletePatient(${p.id})" style="background: none; color: #c00;"><i class="fas fa-trash"></i></button>
-                  </span>
+        html += `<li style="padding: 16px; border-bottom: 1px solid var(--gray-border); display: flex; justify-content: space-between; align-items: center;">
+                  <div><strong style="font-size: 1.1rem;">${p.nome}</strong> ${p.idade ? '· '+p.idade : ''}</div>
+                  <div>
+                    <button class="btn-small" onclick="selectPatient(${p.id})" style="background: var(--primary-light); color: var(--primary-dark); border: none; margin-right: 8px;"><i class="fas fa-folder-open"></i></button>
+                    <button class="btn-small" onclick="deletePatient(${p.id})" style="background: none; color: var(--danger); border: 1px solid var(--danger);"><i class="fas fa-trash"></i></button>
+                  </div>
                 </li>`;
       });
       html += '</ul>';
       el.innerHTML = html;
     }
+
     window.selectPatient = function(id) {
       pacienteAtualId = id;
       showSection('record');
-    }
+    };
+
     window.deletePatient = function(id) {
-      if (confirm('Remover paciente?')) {
+      if (confirm('Remover este paciente e todos os seus dados?')) {
         pacientes = pacientes.filter(p => p.id !== id);
+        // Remove consultas associadas
+        consultas = consultas.filter(c => c.pacienteId !== id);
         localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
+        localStorage.setItem('andy_consultas', JSON.stringify(consultas));
         renderPatientList();
         renderPatientSelectors();
+        atualizarAgenda();
       }
-    }
+    };
+
     function renderPatientSelectors() {
-      const selects = ['patientSelector', 'docPatientSelector', 'xrayPatientSelector'];
+      const selects = ['patientSelector', 'docPatientSelector', 'xrayPatientSelector', 'appointmentPatientSelect'];
       selects.forEach(selId => {
         const sel = document.getElementById(selId);
         if (!sel) return;
@@ -590,58 +979,83 @@
       });
     }
 
-    // ========== ODONTOGRAMA ==========
+    // -------------------------------------------------------------------------
+    // ODONTOGRAMA COMPLETO (FDI, 32 DENTES)
+    // -------------------------------------------------------------------------
     function getFDI(index) {
+      // Converte índice 1-32 para numeração FDI
       if (index <= 16) {
-        if (index <= 8) return (18 - (index-1)) + '';
-        else return (21 + (index-9)) + '';
+        if (index <= 8) return (18 - (index - 1)) + '';
+        else return (21 + (index - 9)) + '';
       } else {
         let i = index - 16;
-        if (i <= 8) return (48 - (i-1)) + '';
-        else return (31 + (i-9)) + '';
+        if (i <= 8) return (48 - (i - 1)) + '';
+        else return (31 + (i - 9)) + '';
       }
     }
+
     function initToothGrid() {
       const grid = document.getElementById('teethGrid');
-      let html = `<div style="grid-column: span 8; text-align: center; font-weight: bold; color: #028476;">🦷 ARCADA SUPERIOR</div>`;
-      for (let i = 1; i <= 16; i++) html += `<div class="tooth" data-tooth="${i}" onclick="openToothMenu(${i})"><span>🦷</span>${getFDI(i)}</div>`;
-      html += `<div style="grid-column: span 8; text-align: center; font-weight: bold; color: #028476; margin-top: 16px;">🦷 ARCADA INFERIOR</div>`;
-      for (let i = 17; i <= 32; i++) html += `<div class="tooth" data-tooth="${i}" onclick="openToothMenu(${i})"><span>🦷</span>${getFDI(i)}</div>`;
+      let html = `<div style="grid-column: span 8; text-align: center; font-weight: bold; color: var(--primary-dark); margin-bottom: 8px;">🦷 ARCADA SUPERIOR</div>`;
+      for (let i = 1; i <= 16; i++) {
+        html += `<div class="tooth" data-tooth="${i}" onclick="openToothMenu(${i})" id="tooth-${i}">
+                  <span>🦷</span>${getFDI(i)}
+                </div>`;
+      }
+      html += `<div style="grid-column: span 8; text-align: center; font-weight: bold; color: var(--primary-dark); margin-top: 20px; margin-bottom: 8px;">🦷 ARCADA INFERIOR</div>`;
+      for (let i = 17; i <= 32; i++) {
+        html += `<div class="tooth" data-tooth="${i}" onclick="openToothMenu(${i})" id="tooth-${i}">
+                  <span>🦷</span>${getFDI(i)}
+                </div>`;
+      }
       grid.innerHTML = html;
     }
+
     window.openToothMenu = function(toothNum) {
-      if (!pacienteAtualId) return alert('Selecione um paciente.');
+      if (!pacienteAtualId) return alert('Selecione um paciente primeiro.');
       const paciente = pacientes.find(p => p.id == pacienteAtualId);
       if (!paciente) return;
-      const status = prompt(`Dente ${getFDI(toothNum)}\nEscolha o status:\n1 - Sadio\n2 - Cárie\n3 - Restaurado\n4 - Ausente\n5 - Coroa\n6 - Canal`);
-      if (!status) return;
-      const map = { '1':'sadio', '2':'cárie', '3':'restaurado', '4':'ausente', '5':'coroa', '6':'canal' };
-      const desc = map[status];
-      if (!desc) return alert('Opção inválida');
+
+      // Menu interativo (simulado com prompt, mas poderia ser um modal)
+      const statusOpcao = prompt(`Dente ${getFDI(toothNum)}\nEscolha:\n1 - Sadio\n2 - Cárie\n3 - Restaurado\n4 - Ausente\n5 - Coroa\n6 - Canal`);
+      if (!statusOpcao) return;
+      const mapa = {
+        '1': 'sadio', '2': 'cárie', '3': 'restaurado',
+        '4': 'ausente', '5': 'coroa', '6': 'canal'
+      };
+      const status = mapa[statusOpcao];
+      if (!status) return alert('Opção inválida');
+
       const obs = prompt('Observação (opcional):') || '';
-      if (!paciente.odontograma) paciente.odontograma = Array(32).fill({ status: 'sadio', obs: '' });
-      paciente.odontograma[toothNum-1] = { status: desc, obs: obs };
+      paciente.odontograma[toothNum - 1] = { status, obs };
       localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
       highlightTeeth(paciente.odontograma);
-    }
+    };
+
     function highlightTeeth(odontoArray) {
-      const teeth = document.querySelectorAll('.tooth');
-      teeth.forEach((t, idx) => {
-        t.classList.remove('caries', 'restored', 'missing', 'crown', 'root', 'selected');
-        if (odontoArray && odontoArray[idx]) {
-          const st = odontoArray[idx].status;
-          if (st === 'cárie') t.classList.add('caries');
-          else if (st === 'restaurado') t.classList.add('restored');
-          else if (st === 'ausente') t.classList.add('missing');
-          else if (st === 'coroa') t.classList.add('crown');
-          else if (st === 'canal') t.classList.add('root');
-          else if (st === 'sadio') t.classList.add('selected');
+      for (let i = 1; i <= 32; i++) {
+        const toothEl = document.getElementById(`tooth-${i}`);
+        if (!toothEl) continue;
+        toothEl.classList.remove('caries', 'restored', 'missing', 'crown', 'root', 'selected', 'has-obs');
+        if (odontoArray && odontoArray[i - 1]) {
+          const st = odontoArray[i - 1].status;
+          if (st === 'cárie') toothEl.classList.add('caries');
+          else if (st === 'restaurado') toothEl.classList.add('restored');
+          else if (st === 'ausente') toothEl.classList.add('missing');
+          else if (st === 'coroa') toothEl.classList.add('crown');
+          else if (st === 'canal') toothEl.classList.add('root');
+          else if (st === 'sadio') toothEl.classList.add('selected');
+          if (odontoArray[i - 1].obs) toothEl.classList.add('has-obs');
         }
-      });
+      }
     }
+
+    // -------------------------------------------------------------------------
+    // PRONTUÁRIO CLÍNICO
+    // -------------------------------------------------------------------------
     window.loadClinicalRecord = function() {
       const sel = document.getElementById('patientSelector');
-      if (!sel.value) return alert('Escolha um paciente');
+      if (!sel.value) return alert('Escolha um paciente.');
       pacienteAtualId = parseInt(sel.value);
       const paciente = pacientes.find(p => p.id == pacienteAtualId);
       if (paciente) {
@@ -654,13 +1068,15 @@
         highlightTeeth(paciente.odontograma);
         showSection('record');
       }
-    }
+    };
+
     window.openRecord = function() {
       const sel = document.getElementById('patientSelector');
       if (sel.value) loadClinicalRecord();
-    }
+    };
+
     window.saveClinicalRecord = function() {
-      if (!pacienteAtualId) return;
+      if (!pacienteAtualId) return alert('Nenhum paciente selecionado.');
       const paciente = pacientes.find(p => p.id == pacienteAtualId);
       if (paciente) {
         paciente.idade = document.getElementById('patientAge').value;
@@ -668,15 +1084,18 @@
         paciente.historia = document.getElementById('patientHistory').value;
         paciente.notas = document.getElementById('clinicalNotes').value;
         localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
-        alert('Prontuário salvo!');
+        alert('✅ Prontuário salvo com sucesso!');
       }
-    }
+    };
 
-    // ========== DOCUMENTOS ==========
+    // -------------------------------------------------------------------------
+    // DOCUMENTOS (RECEITUÁRIO, ORÇAMENTO, LAUDO, ATESTADO)
+    // -------------------------------------------------------------------------
     window.updateDocPatient = function() {
       const sel = document.getElementById('docPatientSelector');
       docPacienteId = sel.value ? parseInt(sel.value) : null;
-    }
+    };
+
     window.showDocTab = function(tipo) {
       docTipoAtual = tipo;
       document.getElementById('docPrescricaoPanel').style.display = tipo === 'prescricao' ? 'block' : 'none';
@@ -684,184 +1103,399 @@
       document.getElementById('docLaudoPanel').style.display = tipo === 'laudo' ? 'block' : 'none';
       document.getElementById('docAtestadoPanel').style.display = tipo === 'atestado' ? 'block' : 'none';
       if (tipo === 'orcamento') calcularTotalOrcamento();
-    }
-    // Medicamentos
+    };
+
+    // ----- MEDICAMENTOS (RECEITUÁRIO) -----
     window.addMedicamento = function() {
       const nome = document.getElementById('medNome').value.trim();
-      const pos = document.getElementById('medPosologia').value.trim();
-      const dur = document.getElementById('medDuracao').value.trim();
-      if (!nome || !pos || !dur) return alert('Preencha todos os campos do medicamento');
-      medicamentos.push({ nome, posologia: pos, duracao: dur });
+      const dosagem = document.getElementById('medDosagem').value.trim();
+      const forma = document.getElementById('medForma').value.trim();
+      const posologia = document.getElementById('medPosologia').value.trim();
+      const duracao = document.getElementById('medDuracao').value.trim();
+      if (!nome || !dosagem || !posologia || !duracao) {
+        return alert('Preencha pelo menos medicamento, dosagem, posologia e duração.');
+      }
+      medicamentos.push({
+        nome, dosagem, forma: forma || 'unidade',
+        posologia, duracao
+      });
       renderMedicamentos();
+      // Limpar campos
       document.getElementById('medNome').value = '';
+      document.getElementById('medDosagem').value = '';
+      document.getElementById('medForma').value = '';
       document.getElementById('medPosologia').value = '';
       document.getElementById('medDuracao').value = '';
-    }
+    };
+
     function renderMedicamentos() {
       const container = document.getElementById('medicamentoList');
+      if (medicamentos.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-light); padding: 16px; text-align: center;">Nenhum medicamento adicionado.</p>';
+        return;
+      }
       let html = '';
       medicamentos.forEach((med, idx) => {
         html += `<div class="list-item">
-          <div class="info"><strong>${med.nome}</strong> — ${med.posologia} por ${med.duracao}</div>
-          <div class="actions"><button onclick="removerMedicamento(${idx})"><i class="fas fa-trash"></i></button></div>
-        </div>`;
+                  <div class="item-info">
+                    <strong>${med.nome} ${med.dosagem}</strong> ${med.forma}<br>
+                    ${med.posologia} · ${med.duracao}
+                  </div>
+                  <div class="item-actions">
+                    <button onclick="removerMedicamento(${idx})"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>`;
       });
       container.innerHTML = html;
     }
+
     window.removerMedicamento = function(idx) {
       medicamentos.splice(idx, 1);
       renderMedicamentos();
-    }
-    // Procedimentos
+    };
+
+    // ----- PROCEDIMENTOS (ORÇAMENTO) -----
     window.addProcedimento = function() {
       const nome = document.getElementById('procNome').value.trim();
+      const dente = document.getElementById('procDente').value.trim();
       const qtd = parseInt(document.getElementById('procQtd').value) || 1;
-      const valor = parseFloat(document.getElementById('procValor').value.replace(',','.')) || 0;
-      if (!nome || valor <= 0) return alert('Preencha nome e valor válido');
-      procedimentos.push({ nome, qtd, valorUnitario: valor });
+      let valor = document.getElementById('procValor').value.trim();
+      valor = parseFloat(valor.replace(',', '.')) || 0;
+      if (!nome || valor <= 0) return alert('Preencha o nome do procedimento e valor válido.');
+      const descricao = dente ? `${nome} (dente ${dente})` : nome;
+      procedimentos.push({
+        descricao: descricao,
+        qtd: qtd,
+        valorUnitario: valor
+      });
       renderProcedimentos();
       document.getElementById('procNome').value = '';
+      document.getElementById('procDente').value = '';
       document.getElementById('procQtd').value = '1';
       document.getElementById('procValor').value = '';
       calcularTotalOrcamento();
-    }
+    };
+
     function renderProcedimentos() {
       const container = document.getElementById('procedimentoList');
+      if (procedimentos.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-light); padding: 16px; text-align: center;">Nenhum procedimento adicionado.</p>';
+        return;
+      }
       let html = '';
       procedimentos.forEach((proc, idx) => {
-        const totalItem = proc.qtd * proc.valorUnitario;
+        const subtotal = proc.qtd * proc.valorUnitario;
         html += `<div class="list-item">
-          <div class="info"><strong>${proc.nome}</strong> ${proc.qtd}x R$ ${proc.valorUnitario.toFixed(2)} = R$ ${totalItem.toFixed(2)}</div>
-          <div class="actions"><button onclick="removerProcedimento(${idx})"><i class="fas fa-trash"></i></button></div>
-        </div>`;
+                  <div class="item-info">
+                    <strong>${proc.descricao}</strong><br>
+                    ${proc.qtd}x R$ ${proc.valorUnitario.toFixed(2)} = R$ ${subtotal.toFixed(2)}
+                  </div>
+                  <div class="item-actions">
+                    <button onclick="removerProcedimento(${idx})"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>`;
       });
       container.innerHTML = html;
     }
+
     window.removerProcedimento = function(idx) {
       procedimentos.splice(idx, 1);
       renderProcedimentos();
       calcularTotalOrcamento();
-    }
+    };
+
     function calcularTotalOrcamento() {
       let total = 0;
       procedimentos.forEach(p => total += p.qtd * p.valorUnitario);
-      document.getElementById('orcamentoTotal').innerText = total.toFixed(2);
+      document.getElementById('orcamentoTotal').innerText = total.toFixed(2).replace('.', ',');
     }
 
+    // ----- GERAÇÃO DO DOCUMENTO (COM FORMATAÇÃO LIMPA) -----
     window.generateDoc = function() {
       if (!docPacienteId) return alert('Selecione um paciente.');
       const paciente = pacientes.find(p => p.id == docPacienteId);
       if (!paciente) return;
+
       const hoje = new Date().toLocaleDateString('pt-BR');
-      const cabecalho = `${profissional.nome}\n${profissional.cro}\n${profissional.carimbo}\n${'-'.repeat(40)}\n`;
+      const cabecalho = `${profissional.nome}\n${profissional.cro}\n${profissional.carimbo}\n${'═'.repeat(48)}\n`;
       let conteudo = '';
 
       if (docTipoAtual === 'prescricao') {
-        conteudo = `${cabecalho}RECEITUÁRIO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\n`;
-        if (medicamentos.length === 0) conteudo += 'Nenhum medicamento prescrito.\n';
-        else {
+        conteudo = `${cabecalho}RECEITUÁRIO ODONTOLÓGICO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\n${'─'.repeat(48)}\n`;
+        if (medicamentos.length === 0) {
+          conteudo += 'Nenhum medicamento prescrito.\n';
+        } else {
           medicamentos.forEach(m => {
-            conteudo += `• ${m.nome}: ${m.posologia} por ${m.duracao}\n`;
+            conteudo += `• ${m.nome} ${m.dosagem} – ${m.forma}\n  ${m.posologia} – ${m.duracao}\n\n`;
           });
         }
         const obs = document.getElementById('prescricaoObs').value;
-        if (obs) conteudo += `\nObservações: ${obs}\n`;
-        conteudo += `\n${'_'.repeat(40)}\n${profissional.assinatura}\n${profissional.cro}`;
+        if (obs) conteudo += `Observações: ${obs}\n\n`;
+        conteudo += `${'═'.repeat(48)}\n${profissional.assinatura}\n${profissional.cro}`;
       }
       else if (docTipoAtual === 'orcamento') {
-        conteudo = `${cabecalho}ORÇAMENTO ODONTOLÓGICO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\n`;
-        if (procedimentos.length === 0) conteudo += 'Nenhum procedimento listado.\n';
-        else {
+        conteudo = `${cabecalho}ORÇAMENTO ODONTOLÓGICO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\n${'─'.repeat(48)}\n`;
+        if (procedimentos.length === 0) {
+          conteudo += 'Nenhum procedimento listado.\n';
+        } else {
           let totalGeral = 0;
           procedimentos.forEach(p => {
             const subtotal = p.qtd * p.valorUnitario;
             totalGeral += subtotal;
-            conteudo += `${p.nome} - ${p.qtd}x R$ ${p.valorUnitario.toFixed(2)} = R$ ${subtotal.toFixed(2)}\n`;
+            conteudo += `${p.descricao.padEnd(30)} ${p.qtd}x R$ ${p.valorUnitario.toFixed(2).padStart(8)} = R$ ${subtotal.toFixed(2)}\n`;
           });
-          conteudo += `\nTOTAL: R$ ${totalGeral.toFixed(2)}\n`;
+          conteudo += `${'─'.repeat(48)}\nTOTAL: R$ ${totalGeral.toFixed(2)}\n`;
         }
         const obs = document.getElementById('orcamentoObs').value;
         if (obs) conteudo += `\nObservações: ${obs}\n`;
-        conteudo += `\n${'_'.repeat(40)}\n${profissional.assinatura}\n${profissional.cro}`;
+        conteudo += `\n${'═'.repeat(48)}\n${profissional.assinatura}\n${profissional.cro}`;
       }
       else if (docTipoAtual === 'laudo') {
         const exame = document.getElementById('laudoExame').value || '(exame não informado)';
         const conclusao = document.getElementById('laudoConclusao').value || '(conclusão não informada)';
-        conteudo = `${cabecalho}LAUDO ODONTOLÓGICO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\nExame: ${exame}\n\nConclusão: ${conclusao}\n\n${'_'.repeat(40)}\n${profissional.assinatura}\n${profissional.cro}`;
+        conteudo = `${cabecalho}LAUDO ODONTOLÓGICO\n\nPaciente: ${paciente.nome}\nData: ${hoje}\n\nExame: ${exame}\n\nConclusão:\n${conclusao}\n\n${'═'.repeat(48)}\n${profissional.assinatura}\n${profissional.cro}`;
       }
       else if (docTipoAtual === 'atestado') {
         const periodo = document.getElementById('atestadoPeriodo').value || '24 horas';
         const obs = document.getElementById('atestadoObs').value || '';
         conteudo = `${cabecalho}ATESTADO ODONTOLÓGICO\n\nAtesto que ${paciente.nome} compareceu a esta clínica no dia ${hoje}, necessitando de repouso por ${periodo}.\n`;
         if (obs) conteudo += `\nObservações: ${obs}\n`;
-        conteudo += `\n${'_'.repeat(40)}\n${profissional.assinatura}\n${profissional.cro}`;
+        conteudo += `\n${'═'.repeat(48)}\n${profissional.assinatura}\n${profissional.cro}`;
       }
 
       document.getElementById('docContent').innerText = conteudo;
-    }
+    };
+
     window.printDoc = function() {
       const conteudo = document.getElementById('docContent').innerText;
       if (!conteudo) return alert('Nenhum documento gerado.');
       const win = window.open('', '_blank');
-      win.document.write(`<pre style="font-family: monospace; padding: 20px;">${conteudo}</pre>`);
+      win.document.write(`<pre style="font-family: 'Courier New', monospace; padding: 28px; font-size: 14px; line-height: 1.6;">${conteudo}</pre>`);
       win.document.close();
       win.print();
+    };
+
+    // -------------------------------------------------------------------------
+    // AGENDA COMPLETA (SEMANAL)
+    // -------------------------------------------------------------------------
+    function getDiasSemana(referenceDate) {
+      const dias = [];
+      const inicio = new Date(referenceDate);
+      inicio.setDate(referenceDate.getDate() - referenceDate.getDay() + 1); // Segunda-feira
+      for (let i = 0; i < 7; i++) {
+        const dia = new Date(inicio);
+        dia.setDate(inicio.getDate() + i);
+        dias.push(dia);
+      }
+      return dias;
     }
 
-    // ========== RADIOGRAFIAS ==========
+    function formatarDataSemana(dias) {
+      if (!dias || dias.length === 0) return '';
+      const primeiro = dias[0];
+      const ultimo = dias[6];
+      return `${primeiro.getDate()} a ${ultimo.getDate()} de ${ultimo.toLocaleString('pt-BR', { month: 'long' })}`;
+    }
+
+    function atualizarAgenda() {
+      const hoje = new Date();
+      const referencia = new Date(hoje);
+      referencia.setDate(hoje.getDate() + semanaOffset * 7);
+      const diasSemana = getDiasSemana(referencia);
+      
+      // Cabeçalho
+      let headerHtml = '';
+      const diasSemanaAbrev = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+      diasSemana.forEach((dia, idx) => {
+        headerHtml += `<div class="weekday">${diasSemanaAbrev[idx]}<br><span style="font-size: 1.1rem;">${dia.getDate()}</span></div>`;
+      });
+      document.getElementById('weekdayHeaders').innerHTML = headerHtml;
+      document.getElementById('semanaLabel').innerText = formatarDataSemana(diasSemana);
+
+      // Horários: 8h às 18h
+      const horarios = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+      let gridHtml = '';
+      horarios.forEach(hora => {
+        gridHtml += `<div class="agenda-row">`;
+        gridHtml += `<div class="time-slot">${hora}</div>`;
+        for (let d = 0; d < 7; d++) {
+          const dataCell = new Date(diasSemana[d]);
+          const [h, m] = hora.split(':');
+          dataCell.setHours(parseInt(h), parseInt(m), 0);
+          const cellId = `cell-${dataCell.getTime()}`;
+          gridHtml += `<div class="agenda-cell" id="${cellId}" onclick="abrirModalAgendamento('${dataCell.toISOString()}')">`;
+          
+          // Buscar consultas neste horário
+          const consultasNoHorario = consultas.filter(c => {
+            const dataConsulta = new Date(c.dataHora);
+            return dataConsulta.getTime() === dataCell.getTime();
+          });
+          consultasNoHorario.forEach(cons => {
+            const paciente = pacientes.find(p => p.id == cons.pacienteId);
+            gridHtml += `<div class="appointment" title="${cons.observacoes || ''}">
+                          <span>${paciente ? paciente.nome.split(' ')[0] : '?'}</span>
+                          <i class="fas fa-pencil-alt" onclick="event.stopPropagation(); editarConsulta(${cons.id})"></i>
+                        </div>`;
+          });
+          gridHtml += `</div>`;
+        }
+        gridHtml += `</div>`;
+      });
+      document.getElementById('agendaGrid').innerHTML = gridHtml;
+    }
+
+    window.semanaAnterior = function() {
+      semanaOffset--;
+      atualizarAgenda();
+    };
+
+    window.proximaSemana = function() {
+      semanaOffset++;
+      atualizarAgenda();
+    };
+
+    window.abrirModalAgendamento = function(dataISO) {
+      const data = new Date(dataISO);
+      document.getElementById('appointmentDate').value = data.toISOString().split('T')[0];
+      document.getElementById('appointmentTime').value = `${data.getHours().toString().padStart(2,'0')}:${data.getMinutes().toString().padStart(2,'0')}`;
+      // Rolagem suave até o formulário
+      document.getElementById('appointmentPatientSelect').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.addAppointment = function() {
+      const pacienteId = parseInt(document.getElementById('appointmentPatientSelect').value);
+      if (!pacienteId) return alert('Selecione um paciente.');
+      const dataStr = document.getElementById('appointmentDate').value;
+      const timeStr = document.getElementById('appointmentTime').value;
+      if (!dataStr || !timeStr) return alert('Preencha data e hora.');
+      const dataHora = new Date(`${dataStr}T${timeStr}:00`);
+      const observacoes = document.getElementById('appointmentNotes').value;
+
+      const novaConsulta = {
+        id: Date.now(),
+        pacienteId: pacienteId,
+        dataHora: dataHora.toISOString(),
+        observacoes: observacoes
+      };
+      consultas.push(novaConsulta);
+      localStorage.setItem('andy_consultas', JSON.stringify(consultas));
+      document.getElementById('appointmentNotes').value = '';
+      atualizarAgenda();
+      atualizarToday();
+      alert('✅ Consulta agendada!');
+    };
+
+    window.editarConsulta = function(consultaId) {
+      const consulta = consultas.find(c => c.id === consultaId);
+      if (!consulta) return;
+      const novaObs = prompt('Editar observações:', consulta.observacoes || '');
+      if (novaObs !== null) {
+        consulta.observacoes = novaObs;
+        localStorage.setItem('andy_consultas', JSON.stringify(consultas));
+        atualizarAgenda();
+      }
+    };
+
+    // -------------------------------------------------------------------------
+    // PAINEL HOJE
+    // -------------------------------------------------------------------------
+    function atualizarToday() {
+      const hoje = new Date();
+      hoje.setHours(0,0,0,0);
+      const amanha = new Date(hoje);
+      amanha.setDate(hoje.getDate() + 1);
+      
+      const consultasHoje = consultas.filter(c => {
+        const dataC = new Date(c.dataHora);
+        return dataC >= hoje && dataC < amanha;
+      }).sort((a,b) => new Date(a.dataHora) - new Date(b.dataHora));
+
+      document.getElementById('todayDate').innerHTML = `<i class="fas fa-calendar-check"></i> ${hoje.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`;
+      
+      if (consultasHoje.length === 0) {
+        document.getElementById('todayAppointmentsCount').innerText = 'Nenhuma consulta para hoje.';
+        document.getElementById('todayAppointmentsList').innerHTML = '';
+      } else {
+        document.getElementById('todayAppointmentsCount').innerHTML = `<strong>${consultasHoje.length}</strong> consulta(s) agendada(s)`;
+        let lista = '';
+        consultasHoje.forEach(c => {
+          const paciente = pacientes.find(p => p.id === c.pacienteId);
+          const hora = new Date(c.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          lista += `<div style="background: white; border-radius: 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary);">
+                      <div><strong>${paciente?.nome || 'Paciente removido'}</strong><br><span style="color: var(--text-light);">${hora} · ${c.observacoes || '—'}</span></div>
+                      <button class="btn-small" style="background: none; color: var(--primary);" onclick="showSection('agenda')"><i class="fas fa-arrow-right"></i></button>
+                    </div>`;
+        });
+        document.getElementById('todayAppointmentsList').innerHTML = lista;
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // RADIOGRAFIAS
+    // -------------------------------------------------------------------------
     window.loadXrays = function() {
       const sel = document.getElementById('xrayPatientSelector');
-      if (!sel.value) { document.getElementById('xrayGallery').innerHTML = '<p>Selecione um paciente.</p>'; return; }
+      if (!sel.value) {
+        document.getElementById('xrayGallery').innerHTML = '<p style="color: var(--text-light);">Selecione um paciente.</p>';
+        return;
+      }
       xrayPacienteId = parseInt(sel.value);
-      const paciente = pacientes.find(p => p.id == xrayPacienteId);
+      const paciente = pacientes.find(p => p.id === xrayPacienteId);
       if (paciente) {
         const galeria = document.getElementById('xrayGallery');
         if (!paciente.radiografias || paciente.radiografias.length === 0) {
-          galeria.innerHTML = '<p>Nenhuma radiografia.</p>'; return;
+          galeria.innerHTML = '<p style="color: var(--text-light);">Nenhuma radiografia.</p>';
+          return;
         }
         let html = '';
         paciente.radiografias.forEach((img, idx) => {
-          html += `<div class="radio-item">
+          html += `<div class="xray-item">
                     <img src="${img}" onclick="verImagem('${img}')">
-                    <small>Raio-X ${idx+1}</small>
-                    <button class="btn-small" onclick="deleteXray(${idx})">🗑️</button>
+                    <small style="display: block; margin-top: 8px;">Raio-X ${idx+1}</small>
+                    <button class="btn-small" onclick="deleteXray(${idx})" style="margin-top: 8px; background: var(--danger); color: white;">Excluir</button>
                   </div>`;
         });
         galeria.innerHTML = html;
       }
-    }
+    };
+
     window.handleXrayUpload = function(e) {
       if (!xrayPacienteId) return alert('Selecione um paciente.');
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(ev) {
-        const paciente = pacientes.find(p => p.id == xrayPacienteId);
+        const paciente = pacientes.find(p => p.id === xrayPacienteId);
         if (!paciente.radiografias) paciente.radiografias = [];
         paciente.radiografias.push(ev.target.result);
         localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
         loadXrays();
-      }
+      };
       reader.readAsDataURL(file);
       document.getElementById('xrayUpload').value = '';
-    }
+    };
+
     window.deleteXray = function(idx) {
-      const paciente = pacientes.find(p => p.id == xrayPacienteId);
+      const paciente = pacientes.find(p => p.id === xrayPacienteId);
       if (paciente && paciente.radiografias) {
         paciente.radiografias.splice(idx, 1);
         localStorage.setItem('andy_pacientes', JSON.stringify(pacientes));
         loadXrays();
       }
-    }
+    };
+
     window.verImagem = function(src) {
       const win = window.open();
-      win.document.write(`<img src="${src}" style="max-width:100%;">`);
-    }
-  </script>
-  <script>
-    // Service Worker (PWA)
+      win.document.write(`<img src="${src}" style="max-width:100%; height: auto; display: block; margin: 20px auto;">`);
+    };
+
+    // -------------------------------------------------------------------------
+    // PWA: REGISTRO DO SERVICE WORKER
+    // -------------------------------------------------------------------------
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js').catch(console.error);
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('SW não registrado:', err));
+      });
     }
   </script>
 </body>
